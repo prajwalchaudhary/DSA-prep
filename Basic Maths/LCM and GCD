@@ -1,0 +1,60 @@
+Given two integers a and b, write a function lcmAndGcd() to compute their LCM and GCD. The function takes two integers a and b as input and returns a list containing their LCM and GCD.
+
+Example 1:
+
+Input: a = 5 , b = 10
+Output: 10 5
+Explanation: LCM of 5 and 10 is 10, while their GCD is 5.
+
+Solution :
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+// } Driver Code Ends
+class Solution {
+  public:
+  
+    int solve(long long a, long long b){
+        while(a && b){
+            if(a>b){
+                a=a%b;
+            }
+            else{
+                b=b%a;
+            }
+        }
+        if(a==0){
+            return b;
+        }
+        return a;
+    }
+  
+    vector<long long> lcmAndGcd(long long A , long long B) {
+        vector<long long>ans;
+        long long gcd=solve(A,B);
+        long long lcm=(A*B)/gcd;          // HCF*LCM=num1*num2 and GCD is nothing but HCF
+        ans.push_back(lcm);
+        ans.push_back(gcd);
+        return ans;
+    }
+};
+
+//{ Driver Code Starts.
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        long long A,B;
+        
+        cin>>A>>B;
+
+        Solution ob;
+        vector<long long> ans = ob.lcmAndGcd(A,B);
+        cout<<ans[0]<<" "<<ans[1]<<endl;
+    }
+    return 0;
+}
+// } Driver Code Ends
+
