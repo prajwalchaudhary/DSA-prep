@@ -30,7 +30,7 @@ public:
     {
         long long s=0;
         for(int i=1;i<=N;i++){
-            s+=i*(N/i);
+            s+=i*(N/i);              //For each number i from 1 to N, calculate how many numbers it divides and multiply i by that count.(Trick)
         }
         return s;
     }
