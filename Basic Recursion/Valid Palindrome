@@ -1,0 +1,92 @@
+A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+Example 1:
+
+Input: s = "A man, a plan, a canal: Panama"
+Output: true
+Explanation: "amanaplanacanalpanama" is a palindrome.
+
+Solution :
+
+Recursive Approach : 
+
+class Solution {
+public:
+    bool isValidChar(char c){
+        return isalnum(c);         // checks and return true or false whether value is alpha numeric i.e. 0-9, a-z, A-Z or not.
+    }
+
+    bool solve(string s, int left, int right){
+        if(left>=right){
+            return true;
+        }
+        if(!isValidChar(s[left])){
+            return solve(s, left+1, right);
+        }
+        if(!isValidChar(s[right])){
+            return solve(s, left, right-1);
+        }
+        if(tolower(s[left])!=tolower(s[right])){       //tolower is a function for converting 'a' to 'A'.
+            return false;
+        }
+        return solve(s, left+1, right-1);
+    }
+
+    bool isPalindrome(string s) {
+        int left=0;
+        int right=s.size()-1;
+        bool ans=solve(s,left, right);
+        return ans;
+    }
+};
+
+// But this approach is giving Run time error because recursion depth is too deep for longer strings, So it's better to do this with iterative approach.
+
+Iterative Approach :
+
+class Solution {
+public:
+    bool isValidChar(char c){
+        return isalnum(c);
+    }
+
+    bool isPalindrome(string s) {
+        int left=0;
+        int right=s.size()-1;
+        while(left<right){
+            if(!isValidChar(s[left])){
+                left++;
+                continue;
+            }
+            if(!isValidChar(s[right])){
+                right--;
+                continue;
+            }
+            if(tolower(s[left])!=tolower(s[right])){
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+};
+
+//One important point :
+
+-> Iteration: left++ increments the value of left correctly for the next iteration, while left+1 does not modify left (only calculates the expression).
+-> Recursion: left+1 works as expected because it directly passes the new value to the next recursive call, whereas left++ passes the current value of left and increments it afterward, which causes incorrect behavior.
+
+To Avoid Confusion:
+In iteration: Use left++ or ++left to increment the variable directly.
+In recursion: Use left+1 to explicitly pass the next value in the recursive calls.
+
+
+
+
+
+
