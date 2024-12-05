@@ -26,7 +26,7 @@ class Solution {
             mp[arr[i]]++;
         }
         for(int i=1;i<=arr.size();i++){
-            ans.push_back(mp[i]);
+            ans.push_back(mp[i]);                       //it will store 0 in vector for values which are not in the map, it is the default behavior of map. 
         }
         return ans;
     }
@@ -70,4 +70,13 @@ int main() {
 }
 
 // } Driver Code Ends
+
+
+// Main Point :
+
+Use unordered_map because it will work better in case of average case and best case, it takes O(1) in insertion and fetching, but takes O(n) in worst case because of internal collision.
+and map T.C. is O(log N) but if you face TLE on using unordered_map then use map.
+Becau
+
+
 
