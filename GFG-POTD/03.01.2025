@@ -1,0 +1,71 @@
+COUNT SUBARRAYS WITH GIVEN XOR :
+
+Given an array of integers arr[] and a number k, count the number of subarrays having XOR of their elements as k.
+
+Examples: 
+
+Input: arr[] = [4, 2, 2, 6, 4], k = 6
+Output: 4
+Explanation: The subarrays having XOR of their elements as 6 are [4, 2], [4, 2, 2, 6, 4], [2, 2, 6], and [6]. Hence, the answer is 4.
+
+Solution :
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+class Solution {
+  public:
+    long subarrayXor(vector<int> &arr, int k) {
+        int Xor = 0;
+        long ans = 0;
+        unordered_map<int,int>mp;
+        for(int i=0;i<arr.size();i++){
+           Xor^=arr[i];                     
+           if(Xor==k)                      
+               ans++;
+           if(mp.find(Xor^k)!=mp.end())  
+            { 
+                ans+=mp[Xor^k];
+            }            
+            mp[Xor]++;                        
+        }
+       
+       return ans;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() {
+    int tc;
+    cin >> tc;
+    cin.ignore(); // Ignore the newline after the number of test cases
+
+    while (tc-- > 0) {
+        string input;
+        getline(cin, input); // Read the whole line for the array
+
+        stringstream ss(input);
+        vector<int> arr;
+        int num;
+
+        while (ss >> num) {
+            arr.push_back(num); // Push numbers into the vector
+        }
+
+        int k;
+        cin >> k;
+        cin.ignore(); // Ignore the newline after k
+
+        Solution obj;
+        cout << obj.subarrayXor(arr, k) << endl;
+        cout << "~" << endl;
+    }
+    return 0;
+}
+// } Driver Code Ends
+
+
