@@ -1,0 +1,88 @@
+MAP OF HIGHEST PEAK :
+
+You are given an integer matrix isWater of size m x n that represents a map of land and water cells.
+
+If isWater[i][j] == 0, cell (i, j) is a land cell.
+If isWater[i][j] == 1, cell (i, j) is a water cell.
+You must assign each cell a height in a way that follows these rules:
+
+The height of each cell must be non-negative.
+If the cell is a water cell, its height must be 0.
+Any two adjacent cells must have an absolute height difference of at most 1. A cell is adjacent to another cell if the former is directly north, east, south, or west of the latter (i.e., their sides are touching).
+Find an assignment of heights such that the maximum height in the matrix is maximized.
+
+Return an integer matrix height of size m x n where height[i][j] is cell (i, j)'s height. If there are multiple solutions, return any of them.
+
+Example 1:
+
+Input: isWater = [[0,1],[0,0]]
+Output: [[1,0],[2,1]]
+Explanation: The image shows the assigned heights of each cell.
+The blue cell is the water cell, and the green cells are the land cells.
+
+Solution :
+
+class Solution {
+public:
+    vector<vector<int>> highestPeak(vector<vector<int>>& isWater) {
+        int rows = isWater.size();
+        int columns = isWater[0].size();
+        const int INF = rows * columns;
+        vector<vector<int>> cellHeights(rows, vector<int>(columns, INF));
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                if (isWater[row][col]) {
+                    cellHeights[row][col] = 0;
+                }
+            }
+        }
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                int minNeighborDistance = INF;
+                int neighborRow = row - 1;
+                int neighborCol = col;
+                if (isValidCell(neighborRow, neighborCol, rows, columns)) {
+                    minNeighborDistance =
+                        min(minNeighborDistance,
+                            cellHeights[neighborRow][neighborCol]);
+                }
+                neighborRow = row;
+                neighborCol = col - 1;
+                if (isValidCell(neighborRow, neighborCol, rows, columns)) {
+                    minNeighborDistance =
+                        min(minNeighborDistance,
+                            cellHeights[neighborRow][neighborCol]);
+                }
+                cellHeights[row][col] =
+                    min(cellHeights[row][col], minNeighborDistance + 1);
+            }
+        }
+        for (int row = rows - 1; row >= 0; row--) {
+            for (int col = columns - 1; col >= 0; col--) {
+                int minNeighborDistance = INF;
+                int neighborRow = row + 1;
+                int neighborCol = col;
+                if (isValidCell(neighborRow, neighborCol, rows, columns)) {
+                    minNeighborDistance =
+                        min(minNeighborDistance,
+                            cellHeights[neighborRow][neighborCol]);
+                }
+                neighborRow = row;
+                neighborCol = col + 1;
+                if (isValidCell(neighborRow, neighborCol, rows, columns)) {
+                    minNeighborDistance =
+                        min(minNeighborDistance,
+                            cellHeights[neighborRow][neighborCol]);
+                }
+                cellHeights[row][col] =
+                    min(cellHeights[row][col], minNeighborDistance + 1);
+            }
+        }
+        return cellHeights;
+    }
+
+private:
+    bool isValidCell(int row, int col, int rows, int columns) {
+        return row >= 0 && col >= 0 && row < rows && col < columns;
+    }
+};
