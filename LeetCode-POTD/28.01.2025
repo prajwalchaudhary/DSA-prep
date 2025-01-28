@@ -1,0 +1,107 @@
+MAXIMUM NUMBER OF FISH IN A GRID :
+
+You are given a 0-indexed 2D matrix grid of size m x n, where (r, c) represents:
+
+A land cell if grid[r][c] = 0, or
+A water cell containing grid[r][c] fish, if grid[r][c] > 0.
+A fisher can start at any water cell (r, c) and can do the following operations any number of times:
+
+Catch all the fish at cell (r, c), or
+Move to any adjacent water cell.
+Return the maximum number of fish the fisher can catch if he chooses his starting cell optimally, or 0 if no water cell exists.
+
+An adjacent cell of the cell (r, c), is one of the cells (r, c + 1), (r, c - 1), (r + 1, c) or (r - 1, c) if it exists.
+
+Example 1:
+
+Input: grid = [[0,2,1,0],[4,0,0,3],[1,0,0,4],[0,3,2,0]]
+Output: 7
+Explanation: The fisher can start at cell (1,3) and collect 3 fish, then move to cell (2,3) and collect 4 fish.
+
+Solution :
+
+class Solution {
+private:
+    // Helper function to find the root of a component
+    int findParent(vector<int>& parent, int cellIndex) {
+        if (parent[cellIndex] == cellIndex) {
+            return cellIndex;
+        }
+        return parent[cellIndex] =
+                   findParent(parent, parent[cellIndex]);  // Path compression
+    }
+
+    // Helper function to union two components
+    void unionComponents(vector<int>& parent, vector<int>& componentSize,
+                         vector<int>& totalFish, int cellIndex1,
+                         int cellIndex2) {
+        int root1 = findParent(parent, cellIndex1);
+        int root2 = findParent(parent, cellIndex2);
+
+        if (root1 != root2) {
+            // Union by size to optimize tree height
+            if (componentSize[root1] < componentSize[root2]) {
+                swap(root1, root2);
+            }
+            parent[root2] = root1;
+            componentSize[root1] += componentSize[root2];
+            totalFish[root1] += totalFish[root2];
+        }
+    }
+
+public:
+    int findMaxFish(vector<vector<int>>& grid) {
+        int rowCount = grid.size(), columnCount = grid[0].size();
+        int totalCells = rowCount * columnCount;
+
+        // Initialize Union-Find structures
+        vector<int> parent(totalCells);
+        vector<int> componentSize(totalCells, 1);
+        vector<int> totalFish(totalCells);
+
+        // Set initial parent and fish count for each cell
+        iota(parent.begin(), parent.end(), 0);
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                int cellIndex = row * columnCount + column;
+                totalFish[cellIndex] = grid[row][column];
+            }
+        }
+
+        // Direction vectors for neighbors (right, left, down, up)
+        vector<int> deltaRow{0, 0, 1, -1}, deltaColumn{1, -1, 0, 0};
+
+        // Merge connected components
+        for (int row = 0; row < rowCount; row++) {
+            for (int column = 0; column < columnCount; column++) {
+                if (grid[row][column] >
+                    0) {  // Process only water cells with fish
+                    int cellIndex = row * columnCount + column;
+                    for (int direction = 0; direction < 4; direction++) {
+                        int neighborRow = row + deltaRow[direction];
+                        int neighborColumn = column + deltaColumn[direction];
+                        if (neighborRow >= 0 && neighborRow < rowCount &&
+                            neighborColumn >= 0 &&
+                            neighborColumn < columnCount &&
+                            grid[neighborRow][neighborColumn] > 0) {
+                            int neighborIndex =
+                                neighborRow * columnCount + neighborColumn;
+                            unionComponents(parent, componentSize, totalFish,
+                                            cellIndex, neighborIndex);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Find the maximum fish in any component
+        int maxFish = 0;
+        for (int cellIndex = 0; cellIndex < totalCells; cellIndex++) {
+            if (findParent(parent, cellIndex) ==
+                cellIndex) {  // Check if cellIndex is a root
+                maxFish = max(maxFish, totalFish[cellIndex]);
+            }
+        }
+        return maxFish;
+    }
+};
