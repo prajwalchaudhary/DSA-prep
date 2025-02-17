@@ -1,0 +1,50 @@
+1079. Letter Tile Possibilities :
+
+You have n  tiles, where each tile has one letter tiles[i] printed on it.
+
+Return the number of possible non-empty sequences of letters you can make using the letters printed on those tiles.
+
+Example 1:
+
+Input: tiles = "AAB"
+Output: 8
+Explanation: The possible sequences are "A", "B", "AA", "AB", "BA", "AAB", "ABA", "BAA".
+
+Solution :
+
+class Solution { 
+public:
+    int numTilePossibilities(std::string tiles) {
+        int n = tiles.length();
+        std::vector<int> counts(26, 0);
+        std::vector<int> fac(n + 1, 1);
+        for (int i = 1; i <= n; i++) {
+            fac[i] = i * fac[i - 1];
+        }
+        for (char c : tiles) {
+            counts[c - 'A']++;
+        }
+        std::vector<int> lengthcounts(n + 1, 0);
+        lengthcounts[0] = 1;
+        for (int i = 0; i < 26; i++) {
+            if (counts[i] > 0) {
+                std::vector<int> temp(n + 1, 0);
+                for (int j = 0; j <= n && lengthcounts[j] > 0; j++) {
+                    for (int k = 1; k <= counts[i]; k++) {
+                        int totallength = j + k;
+                        temp[totallength] += lengthcounts[j] * fac[totallength] / (fac[k] * fac[j]);
+                    }
+                }
+                for (int j = 0; j <= n; j++) {
+                    lengthcounts[j] += temp[j];
+                }
+            }
+        }
+        int ans = 0;
+        for (int i = 1; i <= n; i++) {
+            ans += lengthcounts[i];
+        }
+        return ans;
+    }
+};
+
