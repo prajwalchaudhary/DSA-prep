@@ -1,0 +1,65 @@
+Parenthesis Checker :
+
+Given a string s, composed of different combinations of '(' , ')', '{', '}', '[', ']', verify the validity of the arrangement.
+An input string is valid if:
+
+         1. Open brackets must be closed by the same type of brackets.
+         2. Open brackets must be closed in the correct order.
+
+Examples :
+
+Input: s = "[{()}]"
+Output: true
+Explanation: All the brackets are well-formed.
+
+Solution :
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+
+class Solution {
+  public:
+    bool isBalanced(string& s) {
+        // code here
+        stack<char> st;
+        for(int i=0;i<s.size();i++){
+            if(st.empty() || s[i] == '(' || s[i] == '{' || s[i] == '['){
+                st.push(s[i]);
+            }else{
+                if(s[i] == ')' && st.top() == '(') st.pop();
+                else if(s[i] == '}' && st.top() == '{') st.pop();
+                else if(s[i] == ']' && st.top() == '[') st.pop();
+                else return false;
+            }
+        }
+        if(st.empty()) return true;
+        return false;
+    }
+};
+
+//{ Driver Code Starts.
+
+int main() {
+    int t;
+    string a;
+    cin >> t;
+    while (t--) {
+        cin >> a;
+        Solution obj;
+        if (obj.isBalanced(a))
+            cout << "true" << endl;
+        else
+            cout << "false" << endl;
+
+        cout << "~"
+             << "\n";
+    }
+}
+// } Driver Code Ends
+
+
+
