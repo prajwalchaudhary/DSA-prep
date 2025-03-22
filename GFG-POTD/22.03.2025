@@ -1,0 +1,74 @@
+Stickler Thief II :
+
+You are given an array arr[] which represents houses arranged in a circle, where each house has a certain value. A thief aims to maximize the total stolen value without robbing two adjacent houses.
+Determine the maximum amount the thief can steal.
+
+Note: Since the houses are in a circle, the first and last houses are also considered adjacent.
+
+Examples:
+
+Input: arr[] = [2, 3, 2]
+Output: 3
+Explanation: arr[0] and arr[2] can't be robbed because they are adjacent houses. Thus, 3 is the maximum value thief can rob.
+
+Solution : 
+
+//{ Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+
+
+// } Driver Code Ends
+
+class Solution {
+  public:
+  int find(vector<int>&arr,int i,int n){
+      int pre1=0,pre2=0;
+      for(int j=i+1;j<=n;j++){
+          int loot=arr[j-1];
+          int dontloot=pre1;
+          if(j>1)loot+=pre2;
+          pre2=pre1;
+          pre1=max(loot,dontloot);
+      }
+      return pre1;
+  }
+    int maxValue(vector<int>& arr) {
+        int n=arr.size();
+        int w1=find(arr,0,n-1);
+        int w2=find(arr,1,n);
+        return max(w1,w2);
+    }
+};
+
+
+
+//{ Driver Code Starts.
+
+int main() {
+
+    int t;
+    cin >> t;
+    cin.ignore();
+    while (t--) {
+        string input;
+        int num;
+        vector<int> arr;
+
+        getline(cin, input);
+        stringstream s2(input);
+        while (s2 >> num) {
+            arr.push_back(num);
+        }
+
+        Solution ob;
+        int res;
+        res = ob.maxValue(arr);
+        cout << res << "\n"
+             << "~" << endl;
+    }
+
+    return 0;
+}
+
+// } Driver Code Ends
